@@ -254,7 +254,9 @@ async function updateForecastStrip() {
       "https://api.open-meteo.com/v1/forecast" +
       "?latitude=41.4083&longitude=-92.9165" +
       "&daily=weathercode,temperature_2m_max,temperature_2m_min" +
+      "&temperature_unit=fahrenheit" +
       "&timezone=America%2FChicago";
+
 
     const data = await fetch(url).then(r => r.json());
     const daily = data.daily;
@@ -302,3 +304,4 @@ setInterval(updateForecastStrip, 60 * 60 * 1000); // every hour
 
 </body>
 </html>
+
