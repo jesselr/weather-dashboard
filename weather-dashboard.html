@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Weather Dashboard - Pella, IA</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: #111;
+    color: white;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+  }
+
+  #radar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 55%;
+    border: 0;
+  }
+
+  #current {
+    position: absolute;
+    top: 55%;
+    left: 0;
+    width: 100%;
+    height: 20%;
+    background: #181818;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 1.8rem;
+  }
+
+  #forecast {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 25%;
+    border: 0;
+  }
+
+  .label {
+    font-size: 1.2rem;
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+
+<!-- Radar -->
+<iframe id="radar"
+  src="https://embed.windy.com/embed2.html?lat=41.41&lon=-92.91&zoom=8&level=surface&overlay=radar"
+  frameborder="0">
+</iframe>
+
+<!-- Current Conditions -->
+<div id="current">
+  <div>
+    <div class="label">Temp</div>
+    <span id="temp">--°F</span>
+  </div>
+  <div>
+    <div class="label">Feels Like</div>
+    <span id="feels">--°F</span>
+  </div>
+  <div>
+    <div class="label">Humidity</div>
+    <span id="humidity">--%</span>
+  </div>
+  <div>
+    <div class="label">Wind</div>
+    <span id="wind">-- mph</span>
+  </div>
+</div>
+
+<!-- 7-Day Forecast -->
+<iframe id="forecast"
+  src="https://forecast.weather.gov/MapClick.php?lat=41.4083&lon=-92.9165&unit=0&lg=english&FcstType=dwml"
+  frameborder="0">
+</iframe>
+
+<script>
+async function updateConditions() {
+  try {
+    const url = "https://api.weather.gov/points/41.4083,-92.9165";
+    const point = await fetch(url).then(r => r.json());
+    const obsUrl = point.properties.observationStations;
+    const stations = await fetch(obsUrl).then(r => r.json());
+    const station = stations.features[0].id + "/observations/latest";
+    const obs = await fetch(station).then(r => r.json());
+
+    const props = obs.properties;
+
+    document.getElementById("temp").innerText =
+      Math.round(props.temperature.value * 9/5 + 32) + "°F";
+
+    document.getElementById("feels").innerText =
+      Math.round(props.windChill.value * 9/5 + 32) + "°F";
+
+    document.getElementById("humidity").innerText =
+      props.relativeHumidity.value + "%";
+
+    document.getElementById("wind").innerText =
+      Math.round(props.windSpeed.value * 0.621371) + " mph";
+
+  } catch (e) {
+    console.log("Weather update failed", e);
+  }
+}
+
+updateConditions();
+setInterval(updateConditions, 5 * 60 * 1000);
+</script>
+
+</body>
+</html>
