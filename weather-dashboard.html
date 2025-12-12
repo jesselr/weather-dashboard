@@ -81,10 +81,10 @@
 </div>
 
 <!-- 7-Day Forecast -->
-<iframe id="forecast"
-  src="https://forecast.weather.gov/MapClick.php?lat=41.4083&lon=-92.9165&unit=0&lg=english&FcstType=dwml"
-  frameborder="0">
-</iframe>
+<img id="forecast"
+     src="https://forecast.weather.gov/meteograms/Plotter.php?lat=41.4083&lon=-92.9165&wfo=DMX&zcode=IAZ074&gset=18&gdiff=5&unit=0&tinfo=EY5&pcmd=1010101110110000000000000000000000000000000000&hi=0&inc=2&ag=0&dd=&bw=&hrspan=72&pqfps=&pdfps=&output=gif&pqfpn=0"
+     style="position:absolute;bottom:0;left:0;width:100%;height:25%;object-fit:cover;border:0;">
+
 
 <script>
 async function updateConditions() {
@@ -121,3 +121,4 @@ setInterval(updateConditions, 5 * 60 * 1000);
 
 </body>
 </html>
+
